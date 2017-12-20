@@ -71,7 +71,7 @@ public class QuickExpensePanel : MonoBehaviour {
             name = nField,
             value = totalValue,
             months = -1,
-            inAvenrage = true
+            excludeFromAvenrage = false
         };
         lvlOne.AddToList("randomExpenses", newRand);
         lvlOne.SaveData();

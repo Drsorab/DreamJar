@@ -218,7 +218,7 @@ public class Navigation : MonoBehaviour {
             listMngr.curList.Remove(gameMngr.curListItem);
             editing = false;
         }
-        listMngr.SaveItemInList(editPanel.GetComponent<EditListItem>().nameField, editPanel.GetComponent<EditListItem>().valueField, editPanel.GetComponent<EditListItem>().monthsField, editPanel.GetComponent<EditListItem>().yearsField, true);
+        listMngr.SaveItemInList(editPanel.GetComponent<EditListItem>().nameField, editPanel.GetComponent<EditListItem>().valueField, editPanel.GetComponent<EditListItem>().monthsField, editPanel.GetComponent<EditListItem>().yearsField, editPanel.GetComponent<EditListItem>().excludeFromAverage, true);
     }
 
     public void NoMerge()

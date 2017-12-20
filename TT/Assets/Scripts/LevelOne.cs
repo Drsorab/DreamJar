@@ -148,11 +148,11 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
         });
     }
 
-    public float AddListItems(List<Structs.MoneyEntry> lst, bool avg_balance=false) {
+    public float SumListItems(List<Structs.MoneyEntry> lst, bool avg_balance=false) {
         float res = 0;
         foreach (Structs.MoneyEntry inc in lst)
         {
-            if((avg_balance && (inc.inAvenrage == null || (bool)inc.inAvenrage)) || !avg_balance)
+            if((avg_balance && (!inc.excludeFromAvenrage)) || !avg_balance)
                 res += inc.value;
         }
         return res;
@@ -166,9 +166,9 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
         float sdrExpenses = 0;
         float rndExpenses = 0;
 
-        income = AddListItems(selectedMonth.income);
-        sdrExpenses = AddListItems(selectedMonth.standarExpenses);
-        rndExpenses = AddListItems(selectedMonth.randomExpenses);
+        income = SumListItems(selectedMonth.income);
+        sdrExpenses = SumListItems(selectedMonth.standarExpenses);
+        rndExpenses = SumListItems(selectedMonth.randomExpenses);
 
         float gp = income - sdrExpenses;
         float np = gp - rndExpenses;
@@ -204,7 +204,7 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
 
             //TODO remove
             //GetComponent<Predictions>().GetMonthAverage(loadedData);
-            Debug.Log(loadedData.Data[0].randomExpenses[1].inAvenrage);
+            //Debug.Log(loadedData.Data[0].randomExpenses[1].inAvenrage);
             return loadedData;
         }
         else {
@@ -238,7 +238,7 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
     }
 
 
-    public void UpdateSavedEntry(string n, float v, int ms, int ys, bool inavg=true) {
+    public void UpdateSavedEntry(string n, float v, int ms, int ys, bool exavg=true) {
         Button b = openListItem.transform.GetChild(0).gameObject.GetComponent<Button>();
         //if (n!=curListItem.name && listMngr.CheckForDuplicateName(n) != -1) {
         //    nav.editing = true;
@@ -255,7 +255,7 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
                 name = n,
                 value = v,
                 months = (ms + 12 * ys) < -1 ? -1 : ms + 12 * ys,
-                inAvenrage = inavg
+                excludeFromAvenrage = exavg
             };
 
             listMngr.curList.Add(me);
@@ -263,13 +263,14 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
         else
         {
             if (int.Parse(openListItem.name) >= listMngr.curList.Count)
+
                 listMngr.curList.Add(new Structs.MoneyEntry()
                 {
                     date = DateTime.Now,
                     name = n,
                     value = v,
                     months = (ms + 12 * ys) < -1 ? -1 : ms + 12 * ys,
-                    inAvenrage = inavg
+                    excludeFromAvenrage = exavg
                 });
             else
                 listMngr.curList[int.Parse(openListItem.name)] = new Structs.MoneyEntry()
@@ -278,18 +279,17 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
                     name = n,
                     value = v,
                     months = (ms + 12 * ys) < -1 ? -1 : ms + 12 * ys,
-                    inAvenrage = inavg
+                    excludeFromAvenrage = exavg
                 };
         }
         UpdateBalance();
         //update month average data by sending the month
         GetComponent<Predictions>().GetMonthAverage(loadedData, curMonth);
-        //nav.CloseEditPanel();
     }
 
     void UpdateBalance() {
-        selectedMonth.balance = AddListItems(selectedMonth.income) - AddListItems(selectedMonth.standarExpenses) - AddListItems(selectedMonth.randomExpenses);
-        selectedMonth.avgBalance = AddListItems(selectedMonth.income) - AddListItems(selectedMonth.standarExpenses) - AddListItems(selectedMonth.randomExpenses,true);
+        selectedMonth.balance = SumListItems(selectedMonth.income) - SumListItems(selectedMonth.standarExpenses) - SumListItems(selectedMonth.randomExpenses);
+        selectedMonth.avgBalance = SumListItems(selectedMonth.income) - SumListItems(selectedMonth.standarExpenses) - SumListItems(selectedMonth.randomExpenses,true);
         int index = loadedData.Data.FindIndex(a => a.month == selectedMonth.month && a.year == selectedMonth.year);
 
         loadedData.Data[index] = new Structs.MonthStats()
@@ -321,6 +321,21 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
                 break;
         }
     }
+
+    public Structs.MoneyEntry NewMoneyEntry(string n, float v, int ms, int ys, bool exavg)
+    {
+        Structs.MoneyEntry newEntry = new Structs.MoneyEntry()
+        {
+            date = DateTime.Now,
+            name = n,
+            value = v,
+            months = (ms + 12 * ys) < -1 ? -1 : ms + 12 * ys,
+            excludeFromAvenrage = exavg
+        };
+
+        return newEntry;
+    }
+
     public void OnPointerEnter(GameObject gb)
     {
         if (!gb.name.Contains("Income") && !gb.name.Contains("Random") && !gb.name.Contains("Standar"))

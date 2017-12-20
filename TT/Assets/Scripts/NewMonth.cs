@@ -41,7 +41,7 @@ public class NewMonth : MonoBehaviour {
     }
 
     float CalcPreviousMonthBalance(Structs.MonthStats stats, bool avg_balance = false) {
-        return gameManager.AddListItems(stats.income) - gameManager.AddListItems(stats.standarExpenses) - gameManager.AddListItems(stats.randomExpenses, avg_balance);
+        return gameManager.SumListItems(stats.income) - gameManager.SumListItems(stats.standarExpenses) - gameManager.SumListItems(stats.randomExpenses, avg_balance);
     }
 
     List<Structs.MoneyEntry> TransferValues(List<Structs.MoneyEntry> statsList)

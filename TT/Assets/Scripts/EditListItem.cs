@@ -20,7 +20,7 @@ public class EditListItem : MonoBehaviour {
     public GameObject valueText;
     public GameObject permaButton;
     public GameObject addAverage;
-    public GameObject addAverageButtonText;
+    public GameObject excludeAverageButtonText;
 
     public Sprite dissabledField;
     public Sprite enabledField;
@@ -28,7 +28,8 @@ public class EditListItem : MonoBehaviour {
     public Sprite permDisabled;
     public bool perm = true;
     bool populated = false;
-    bool includedInAverage = true;
+    [HideInInspector]
+    public bool excludeFromAverage = false;
     public List<GameObject> permanentBound = new List<GameObject>();
     public List<GameObject> permanentPanel = new List<GameObject>();
     ListManager listMngr;
@@ -116,7 +117,7 @@ public class EditListItem : MonoBehaviour {
             //new item to be saved
             if (listMngr.CheckForDuplicateName(nameField) == -1)
             {
-                listMngr.SaveItemInList(nameField, valueField, monthsField, yearsField, false);
+                listMngr.SaveItemInList(nameField, valueField, monthsField, yearsField,excludeFromAverage, false);
                 nav.GoBack();
             }
             else
@@ -134,10 +135,10 @@ public class EditListItem : MonoBehaviour {
                     perm = true;
 
                 if (perm)
-                    lvlOne.UpdateSavedEntry(nameField, valueField, -1, -1, includedInAverage);
+                    lvlOne.UpdateSavedEntry(nameField, valueField, -1, -1, excludeFromAverage);
                 else
                 {
-                    lvlOne.UpdateSavedEntry(nameField, valueField, monthsField, yearsField, includedInAverage);
+                    lvlOne.UpdateSavedEntry(nameField, valueField, monthsField, yearsField, excludeFromAverage);
                 }
                 nav.GoBack();
             }
@@ -183,9 +184,7 @@ public class EditListItem : MonoBehaviour {
 
         nameField = nameText.GetComponent<InputField>().text;
         valueField = float.Parse(valueText.GetComponent<InputField>().text);
-        if (item.inAvenrage == null)
-            item.inAvenrage = true;
-        addAverageButtonText.GetComponent<Text>().text =(bool)item.inAvenrage ? "Yes" : "No";
+        excludeAverageButtonText.GetComponent<Text>().text = item.excludeFromAvenrage ? "Yes" : "No";
 
         if (item.months > 0) {
             Awake();
@@ -247,7 +246,7 @@ public class EditListItem : MonoBehaviour {
     }
 
     public void IncludeInAverage() {
-        addAverageButtonText.GetComponent<Text>().text = addAverageButtonText.GetComponent<Text>().text == "Yes" ? "No" : "Yes";
-        includedInAverage = addAverageButtonText.GetComponent<Text>().text=="Yes"?true:false;
+        excludeAverageButtonText.GetComponent<Text>().text = excludeAverageButtonText.GetComponent<Text>().text == "Yes" ? "No" : "Yes";
+        excludeFromAverage = excludeAverageButtonText.GetComponent<Text>().text=="Yes"?true:false;
     }
 }

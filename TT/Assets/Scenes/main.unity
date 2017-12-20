@@ -2825,7 +2825,7 @@ GameObject:
   - component: {fileID: 299486748}
   - component: {fileID: 299486747}
   m_Layer: 5
-  m_Name: AddAverageButton
+  m_Name: ExcludeAverageButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4026,7 +4026,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -5}
   m_SizeDelta: {x: 20, y: 11}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7673,7 +7673,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Include in month's average
+  m_Text: Exclude from month's average
 --- !u!222 &855037247
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10112,7 +10112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1268201852
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13336,7 +13336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1573411954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13358,12 +13358,13 @@ MonoBehaviour:
   valueText: {fileID: 1368972765}
   permaButton: {fileID: 1937349680}
   addAverage: {fileID: 2036897140}
-  addAverageButtonText: {fileID: 936914897}
+  excludeAverageButtonText: {fileID: 936914897}
   dissabledField: {fileID: 21300000, guid: 11d69f9b22a0efb40af07ad014adf5d0, type: 3}
   enabledField: {fileID: 21300000, guid: af7a79ee1d4a3ef4fb3a620301af071b, type: 3}
   permEnabled: {fileID: 21300000, guid: 1ec44d02e93dae64f977f02bc02294bb, type: 3}
   permDisabled: {fileID: 21300000, guid: c141181802428864ea51e6b5e6a03cbf, type: 3}
   perm: 1
+  excludeFromAverage: 1
   permanentBound:
   - {fileID: 823196696}
   - {fileID: 2038236042}
@@ -15834,7 +15835,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2036897141}
   m_Layer: 5
-  m_Name: AddToAverage
+  m_Name: ExcludeFromAverage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16148,7 +16149,7 @@ MonoBehaviour:
     name: 
     value: 0
     months: 0
-    inAvenrage: 0
+    excludeFromAvenrage: 0
   ItemsToDisableForPrevMonths: []
 --- !u!114 &2041051550
 MonoBehaviour:

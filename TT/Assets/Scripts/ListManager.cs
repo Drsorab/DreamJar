@@ -88,26 +88,26 @@ public class ListManager : MonoBehaviour {
         //nav.CloseEditPanel();
     }
 
-    public void SaveItemInList(string n, float v, int ms, int ys, bool merge) {
+    public void SaveItemInList(string n, float v, int ms, int ys, bool exavg, bool merge) {
         if (merge) { 
             int index = CheckForDuplicateName(n);
             if (index != -1)
             {
                 //merge
                 float previousValue = curList[index].value;
-                curList[index] = NewMoneyEntry(n, v + previousValue, ms, ys);
+                curList[index] = lvlOne.NewMoneyEntry(n, v + previousValue, ms, ys,exavg);
             }
             //TODO its the same as below we might be better off with just one
             else {
                 //there is no other item with the same name on the list just save it.
-                Structs.MoneyEntry newEntry = NewMoneyEntry(n, v, ms, ys);
+                Structs.MoneyEntry newEntry = lvlOne.NewMoneyEntry(n, v, ms, ys,exavg);
                 curList.Add(newEntry);
             }
         }
         else
         {
             //not on list
-            Structs.MoneyEntry newEntry = NewMoneyEntry(n,v,ms,ys);
+            Structs.MoneyEntry newEntry = lvlOne.NewMoneyEntry(n,v,ms,ys,exavg);
             curList.Add(newEntry);
         }
         ClearList();
@@ -115,17 +115,6 @@ public class ListManager : MonoBehaviour {
         lvlOne.SaveData();
     }
 
-    Structs.MoneyEntry NewMoneyEntry(string n, float v, int ms, int ys) {
-        Structs.MoneyEntry newEntry = new Structs.MoneyEntry()
-        {
-            date = DateTime.Now,
-            name = n,
-            value = v,
-            months = (ms + 12 * ys) < -1 ? -1 : ms + 12 * ys
-        };
-
-        return newEntry;
-    }
 
     public void PopulateList(List<Structs.MoneyEntry> ltd) {
         curList = ltd;

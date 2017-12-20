@@ -13,7 +13,7 @@ public class Structs : MonoBehaviour {
         public string name;
         public float value;
         public int months;
-        public bool inAvenrage;
+        public bool excludeFromAvenrage;
     }
     [Serializable]
     public struct MonthStats {

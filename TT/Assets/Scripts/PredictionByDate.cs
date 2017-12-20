@@ -96,7 +96,7 @@ public class PredictionByDate : MonoBehaviour {
         }
 
         //int y = count / 12;
-        int m = count - y * 12;
+        //int m = count - y * 12;
         string myKey = gameManager.MonthToInt.FirstOrDefault(x => x.Value == predictionMonth).Key;
         amountAnswerTxt.text = myKey + " / " + (int.Parse(year) + y).ToString();
     }
