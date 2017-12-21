@@ -152,7 +152,7 @@ public class EditListItem : MonoBehaviour {
     }
 
     public void DeleteItem() {
-        listMngr.RemoveItemFromList(nameField, valueField);
+        listMngr.RemoveItemFromList();
     }
 
     public void ResetEditPanel() {

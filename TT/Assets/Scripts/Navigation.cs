@@ -53,7 +53,6 @@ public class Navigation : MonoBehaviour {
     }
 
     public void GoTo(GameObject go) {
-        go.SetActive(true);
         NavigationHistory[NavigationHistory.Count - 1].SetActive(false);
         NavigationHistory.Add(go);
         switch (go.name) {
@@ -69,6 +68,10 @@ public class Navigation : MonoBehaviour {
             case "MonthMenu":
                 gameMngr.GetMonthData();
                 break;
+            case "TagListPanel":
+                tagListPanel.GetComponent<ListManager>().ClearList();
+                go.GetComponent<ListManager>().PopulateTagList(gameMngr.tagList);
+                break;
             case "ListPanel":
                 PickListClick(EventSystem.current.currentSelectedGameObject.name);
                 break;
@@ -76,6 +79,14 @@ public class Navigation : MonoBehaviour {
                 calendar.GetComponent<Calendar>().InitializeCalendar(gameMngr.curYear, path);
                 break;
             case "QuickExpensePanel":
+                if (EventSystem.current.currentSelectedGameObject.name == "Button")
+                {
+                    go.GetComponent<QuickExpensePanel>().ButtonPositions();
+                    gameMngr.openListItem = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
+                    go.GetComponent<QuickExpensePanel>().nameField.GetComponent<InputField>().text = EventSystem.current.currentSelectedGameObject.transform.Find("Name").GetComponent<Text>().text;
+                    go.GetComponent<QuickExpensePanel>().moneyField.GetComponent<InputField>().text = EventSystem.current.currentSelectedGameObject.transform.Find("Value").GetComponent<Text>().text;
+                }
+                go.GetComponent<QuickExpensePanel>().hideMoneyButtons = EventSystem.current.currentSelectedGameObject.name != "Atm" ? true : false;
                 break;
             case "PredictionByAmount":
                 break;
@@ -88,6 +99,7 @@ public class Navigation : MonoBehaviour {
                 NavigationHistory.Add(loadingScreen);
                 break;
         }
+        go.SetActive(true);
     }
 
     public void GoBack()
@@ -107,6 +119,11 @@ public class Navigation : MonoBehaviour {
                 gameMngr.curListItem = new Structs.MoneyEntry();
                 gameMngr.openListItem = null;
                 PickListClick(listMngr.curListName);
+                break;
+            case "TagListPanel":
+                tagListPanel.GetComponent<ListManager>().ClearList();
+                quickExpensePanel.GetComponent<QuickExpensePanel>().ResetQuickExpenses();
+                tagListPanel.GetComponent<ListManager>().PopulateTagList(gameMngr.tagList);
                 break;
         }
     }
@@ -147,45 +164,6 @@ public class Navigation : MonoBehaviour {
             editPanel.GetComponent<EditListItem>().ButtonPositions();
         }
     }
-
-    //public void OpenCalendar(GameObject gb)
-    //{
-    //    calendar.SetActive(true);
-        
-    //    gb.SetActive(false);
-    //}
-
-    //public void GoToPreditions(GameObject go)
-    //{
-    //    if (loadingScreen.activeSelf)
-    //    {
-    //        if (go.name.Contains("Date"))
-    //        {
-    //            path = "predictions";
-    //            predictionsDate.SetActive(true);
-    //            predictionsDate.transform.parent.gameObject.GetComponent<PredictionByDate>().PopulateMe();
-
-    //        }
-    //        else {
-    //            predictionsAmount.SetActive(true);
-    //        }
-    //        loadingScreen.SetActive(false);
-    //    }
-    //}
-
-    //public void CloseCalendar()
-    //{
-    //    if (path == "edit")
-    //    {
-    //        BackToIntro(calendar);
-    //    }
-    //    else
-    //    {
-    //        predictionsDate.SetActive(true);
-
-    //        calendar.SetActive(false);
-    //    }
-    //}
 
     public void CloseLoadingScreen()
     {

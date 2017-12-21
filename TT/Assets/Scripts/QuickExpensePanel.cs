@@ -11,8 +11,9 @@ public class QuickExpensePanel : MonoBehaviour {
     public GameObject moneyField;
     string nField = "";
     float totalValue = 0;
-
+    public bool hideMoneyButtons = false;
     public List<GameObject> hideList = new List<GameObject>();
+    public List<GameObject> buttonList = new List<GameObject>();
 
     // Use this for initialization
     void OnEnable () {
@@ -21,9 +22,12 @@ public class QuickExpensePanel : MonoBehaviour {
             nField = nameField.GetComponent<InputField>().text = DateTime.Now.ToString();
         else
         {
-            nField = nameField.GetComponent<InputField>().text = "";
+            nField = nameField.GetComponent<InputField>().text;
         }
         lvlOne = GameObject.Find("Canvas").GetComponent<LevelOne>();
+        foreach (GameObject g in hideList) {
+            g.SetActive(!hideMoneyButtons);
+        }
     }
 
     private void OnDisable()
@@ -51,32 +55,63 @@ public class QuickExpensePanel : MonoBehaviour {
         SaveQuickExpense();
     }
 
+    public void DeleteIt()
+    {
+        lvlOne.tagList.RemoveAt(int.Parse(lvlOne.openListItem.name));
+        lvlOne.SaveData();
+        Destroy(lvlOne.openListItem);
+    }
+
     public void ResetQuickExpenses() {
         nameField.GetComponent<InputField>().text = "";
         moneyField.GetComponent<InputField>().text = "";
         nField = "";
         totalValue = 0;
+        buttonList[0].SetActive(false);
+        buttonList[1].transform.localPosition = new Vector3(-150, -490, 0);
+        buttonList[2].transform.localPosition = new Vector3(150, -490, 0);
     }
 
     void SaveQuickExpense() {
-        if (nameField.transform.Find("Text").gameObject.GetComponent<Text>().text == "") {
-            nField = nameField.GetComponent<InputField>().text = DateTime.Now.ToString();
-        }
-        if (moneyField.GetComponent<InputField>().text == "")
-            totalValue = 0;
-
-        Structs.MoneyEntry newRand = new Structs.MoneyEntry()
+        if (hideMoneyButtons)
         {
-            date = DateTime.Now,
-            name = nField,
-            value = totalValue,
-            months = -1,
-            excludeFromAvenrage = false
-        };
-        lvlOne.AddToList("randomExpenses", newRand);
+            Structs.Tag newTag = new Structs.Tag()
+            {
+                name = nField,
+                value = totalValue
+            };
+            lvlOne.AddToList("tagList", new Structs.MoneyEntry(), newTag);
+        }
+        else
+        {
+            if (nameField.transform.Find("Text").gameObject.GetComponent<Text>().text == "")
+            {
+                nField = nameField.GetComponent<InputField>().text = DateTime.Now.ToString();
+            }
+            if (moneyField.GetComponent<InputField>().text == "")
+                totalValue = 0;
+
+            Structs.MoneyEntry newRand = new Structs.MoneyEntry()
+            {
+                date = DateTime.Now,
+                name = nField,
+                value = totalValue,
+                months = -1,
+                excludeFromAvenrage = false
+            };
+            lvlOne.AddToList("randomExpenses", newRand, new Structs.Tag());
+        }
         lvlOne.SaveData();
         ResetQuickExpenses();
     }
+
+    public void ButtonPositions()
+    {
+        buttonList[0].SetActive(true);
+        buttonList[1].transform.localPosition = new Vector3(0, -490, 0);
+        buttonList[2].transform.localPosition = new Vector3(257, -490, 0);
+    }
+
     public void DoneChangingName(string input)
     {
         nField = input;

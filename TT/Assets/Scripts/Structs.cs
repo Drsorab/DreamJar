@@ -15,6 +15,7 @@ public class Structs : MonoBehaviour {
         public int months;
         public bool excludeFromAvenrage;
     }
+
     [Serializable]
     public struct MonthStats {
         public List<MoneyEntry> income;
@@ -27,12 +28,20 @@ public class Structs : MonoBehaviour {
     }
 
     [Serializable]
+    public struct Tag
+    {
+        public string name;
+        public float value;
+    }
+
+    [Serializable]
     public class DataCollection
     {
         [SerializeField]
         public List<MonthStats> Data;
         [SerializeField]
         public List<float> MonthAverages;
+        public List<Tag> TagList;
     }
     //public static DataTable ToDataTable<T>(this IList<T> data)
     //{

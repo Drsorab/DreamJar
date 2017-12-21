@@ -47,7 +47,7 @@ public class ListManager : MonoBehaviour {
             if (newItem)
             {
                 go.name = curList.Count.ToString();
-                editPanel.GetComponent<QuickExpensePanel>().nameField.GetComponent<InputField>().text = "leeroy"; 
+                nav.GoTo(editPanel);
             }
         }
     }
@@ -79,10 +79,9 @@ public class ListManager : MonoBehaviour {
         AddItemToList("Name of Expense","Value",true);
     }
 
-    public void RemoveItemFromList(string n, float v)
+    public void RemoveItemFromList()
     {
-        int index = CheckForDuplicateName(n);
-        curList.RemoveAt(index);
+        curList.RemoveAt(int.Parse(lvlOne.openListItem.name));
         lvlOne.SaveData();
         Destroy(lvlOne.openListItem);
         //nav.CloseEditPanel();
@@ -121,6 +120,16 @@ public class ListManager : MonoBehaviour {
         int count = 0;
         foreach (Structs.MoneyEntry me in ltd) {
             AddItemToList(me.name,me.value.ToString(),false,count);
+            count++;
+        }
+    }
+
+    public void PopulateTagList(List<Structs.Tag> ltd)
+    {
+        int count = 0;
+        foreach (Structs.Tag me in ltd)
+        {
+            AddItemToList(me.name, me.value.ToString(), false, count);
             count++;
         }
     }

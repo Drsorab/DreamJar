@@ -27,6 +27,7 @@ public class LevelOne : MonoBehaviour {
     public Structs.MonthStats selectedMonth;
     public string curMonth;
     public string curYear;
+    public List<Structs.Tag> tagList;
 
     public Structs.MoneyEntry curListItem = new Structs.MoneyEntry();
     Structs.DataCollection loadedData = null;
@@ -201,7 +202,7 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
         {
             string json = File.ReadAllText(Application.persistentDataPath + "/Data.json");
             loadedData = JsonUtility.FromJson<Structs.DataCollection>(json);
-
+            tagList = loadedData.TagList;
             //TODO remove
             //GetComponent<Predictions>().GetMonthAverage(loadedData);
             //Debug.Log(loadedData.Data[0].randomExpenses[1].inAvenrage);
@@ -307,7 +308,7 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
     }
 
 
-    public void AddToList(string where, Structs.MoneyEntry what) {
+    public void AddToList(string where, Structs.MoneyEntry what, Structs.Tag what_tag) {
         switch (where)
         {
             case "income":
@@ -318,6 +319,9 @@ public List<GameObject> ItemsToDisableForPrevMonths = new List<GameObject>();
                 break;
             case "randomExpenses":
                 selectedMonth.randomExpenses.Add(what);
+                break;
+            case "tagList":
+                tagList.Add(what_tag);
                 break;
         }
     }
