@@ -152,7 +152,12 @@ public class EditListItem : MonoBehaviour {
     }
 
     public void DeleteItem() {
-        listMngr.RemoveItemFromList();
+        if (String.IsNullOrEmpty(lvlOne.tagList.Find(i => i.name == listMngr.curList[int.Parse(lvlOne.openListItem.name)].name).name)) {
+            listMngr.RemoveItemFromList();
+            nav.GoBack();
+        } else {
+            nav.OpenMergePanel(true);
+        }
     }
 
     public void ResetEditPanel() {

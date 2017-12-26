@@ -19,6 +19,7 @@ public class Navigation : MonoBehaviour {
     public GameObject listPanel;
     public GameObject tagListPanel;
     public bool editing = false;
+    bool tagExists = false;
     string path = "";
 
     List<GameObject> NavigationHistory = new List<GameObject>();
@@ -84,9 +85,16 @@ public class Navigation : MonoBehaviour {
                     go.GetComponent<QuickExpensePanel>().ButtonPositions();
                     gameMngr.openListItem = EventSystem.current.currentSelectedGameObject.transform.parent.gameObject;
                     go.GetComponent<QuickExpensePanel>().nameField.GetComponent<InputField>().text = EventSystem.current.currentSelectedGameObject.transform.Find("Name").GetComponent<Text>().text;
+                    go.GetComponent<QuickExpensePanel>().nameField.GetComponent<InputField>().enabled = false;
+                    go.GetComponent<QuickExpensePanel>().nameField.GetComponent<Image>().sprite = gameMngr.buttDisabled;
                     go.GetComponent<QuickExpensePanel>().moneyField.GetComponent<InputField>().text = EventSystem.current.currentSelectedGameObject.transform.Find("Value").GetComponent<Text>().text;
                 }
+                else {
+                    go.GetComponent<QuickExpensePanel>().nameField.GetComponent<InputField>().enabled = true;
+                    go.GetComponent<QuickExpensePanel>().nameField.GetComponent<Image>().sprite = gameMngr.defaultButton;
+                }
                 go.GetComponent<QuickExpensePanel>().hideMoneyButtons = EventSystem.current.currentSelectedGameObject.name != "Atm" ? true : false;
+
                 break;
             case "PredictionByAmount":
                 break;
@@ -181,8 +189,12 @@ public class Navigation : MonoBehaviour {
         introPanel.SetActive(false);
     }
 
-    public void OpenMergePanel()
+    public void OpenMergePanel(bool tag=false)
     {
+        tagExists = tag;
+        if (tagExists)
+            mergePanel.GetComponent<MergePanel>().ChangeMainText("Deleting this entry will make the associated tag value become 0. Do you want to continue?");
+
         GoTo(mergePanel);
         //editPanel.SetActive(false);
         //mergePanel.SetActive(true);
@@ -190,6 +202,11 @@ public class Navigation : MonoBehaviour {
 
     public void YesMerge()
     {
+        if (tagExists) {
+            listMngr.RemoveItemFromList();
+            tagExists = false;
+            return;
+        }
         //if you are editing something and you change the name to something already in the list. Then we must remove the item you are editing since you accepted the merge
         if (editing)
         {

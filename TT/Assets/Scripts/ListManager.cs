@@ -81,6 +81,12 @@ public class ListManager : MonoBehaviour {
 
     public void RemoveItemFromList()
     {
+        //find tag if it exists and make amount 0
+        Structs.Tag zeroTag = lvlOne.tagList.Find(i => i.name == curList[int.Parse(lvlOne.openListItem.name)].name);
+        zeroTag.value = 0;
+        lvlOne.tagList.Remove(lvlOne.tagList.Find(i => i.name == curList[int.Parse(lvlOne.openListItem.name)].name));
+        lvlOne.tagList.Add(zeroTag);
+
         curList.RemoveAt(int.Parse(lvlOne.openListItem.name));
         lvlOne.SaveData();
         Destroy(lvlOne.openListItem);

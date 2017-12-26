@@ -73,14 +73,43 @@ public class QuickExpensePanel : MonoBehaviour {
     }
 
     void SaveQuickExpense() {
+
+        if (String.IsNullOrEmpty(nField))
+            return;
+
         if (hideMoneyButtons)
         {
-            Structs.Tag newTag = new Structs.Tag()
+            //new tag
+            if (String.IsNullOrEmpty(lvlOne.tagList.Find(i => i.name == nField).name))
             {
-                name = nField,
-                value = totalValue
-            };
-            lvlOne.AddToList("tagList", new Structs.MoneyEntry(), newTag);
+                Structs.Tag newTag = new Structs.Tag()
+                {
+                    name = nField+"-tag",
+                    value = totalValue
+                };
+                lvlOne.AddToList("tagList", new Structs.MoneyEntry(), newTag);
+                //if (totalValue > 0) {
+                    Structs.MoneyEntry newRand = lvlOne.NewMoneyEntry(nField + "-tag", totalValue, -1, 0, false);
+                    lvlOne.AddToList("randomExpenses", newRand, new Structs.Tag());
+               //}
+            }
+            //tag exists
+            else {
+                Structs.MoneyEntry newRand =  lvlOne.selectedMonth.randomExpenses.Find(i => i.name == nField);
+                newRand.value += totalValue;
+                lvlOne.selectedMonth.randomExpenses.Remove(lvlOne.selectedMonth.randomExpenses.Find(i => i.name == nField));
+                lvlOne.selectedMonth.randomExpenses.Add(newRand);
+
+                lvlOne.tagList.Remove(lvlOne.tagList.Find(i => i.name == nField));
+                Structs.Tag newTag = new Structs.Tag()
+                {
+                    name = newRand.name,
+                    value = newRand.value
+                };
+                lvlOne.tagList.Add(newTag);
+                lvlOne.SaveData();
+                Debug.Log(lvlOne.selectedMonth);
+            }
         }
         else
         {
@@ -90,15 +119,7 @@ public class QuickExpensePanel : MonoBehaviour {
             }
             if (moneyField.GetComponent<InputField>().text == "")
                 totalValue = 0;
-
-            Structs.MoneyEntry newRand = new Structs.MoneyEntry()
-            {
-                date = DateTime.Now,
-                name = nField,
-                value = totalValue,
-                months = -1,
-                excludeFromAvenrage = false
-            };
+            Structs.MoneyEntry newRand = lvlOne.NewMoneyEntry(nField, totalValue,-1, 0,false);
             lvlOne.AddToList("randomExpenses", newRand, new Structs.Tag());
         }
         lvlOne.SaveData();
